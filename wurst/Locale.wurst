@@ -18,7 +18,9 @@ class LocalePrivate extends HashMap<string, string>
 
     override function get(string key) returns string
         if super.has(key)
-            return super.get(key)
+            let value = super.get(key)
+            if value.isNotBlank()
+                return value
         return key
 
     override function put(string key, string value)
