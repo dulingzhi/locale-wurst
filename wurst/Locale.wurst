@@ -2,8 +2,8 @@ package Locale
 
 import HashMap
 
-constant var s_Applications = new HashMap<string, HashMap<LocaleLanguage, LocalePrivate>>
-@configurable var g_MapLanguage = LocaleLanguage.enUS
+constant let s_Applications = new HashMap<string, HashMap<LocaleLanguage, LocalePrivate>>
+@configurable let g_MapLanguage = LocaleLanguage.enUS
 
 public enum LocaleLanguage
     zhCN
@@ -33,7 +33,7 @@ public function newLocale(string app, LocaleLanguage lang) returns LocalePrivate
     if not s_Applications.has(app)
         s_Applications.put(app, new HashMap<LocaleLanguage, LocalePrivate>)
     
-    var data = s_Applications.get(app)
+    let data = s_Applications.get(app)
     if not data.has(lang)
         data.put(lang, new LocalePrivate(lang))
     
