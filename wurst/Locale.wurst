@@ -21,6 +21,8 @@ class LocalePrivate extends HashMap<string, string>
             let value = super.get(key)
             if value.isNotBlank()
                 return value
+        else
+            Log.error("Locale-wurst: key {0} isn`t exists.".format(key))
         return key
 
     override function put(string key, string value)
