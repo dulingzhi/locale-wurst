@@ -1,20 +1,21 @@
 package Locale
 
 import HashMap
+import ErrorHandling
 
-constant let s_Applications = new HashMap<string, HashMap<LocaleLanguage, LocalePrivate>>
-@configurable let g_MapLanguage = LocaleLanguage.enUS
+@configurable public constant MAP_LOCALE_LANGUAGE = LocaleLanguage.enUS
 
 public enum LocaleLanguage
     zhCN
     enUS
 
 class LocalePrivate extends HashMap<string, string>
-    private LocaleLanguage m_lang
-    private bool m_readOnly = false
+    private LocaleLanguage mLang
+    private bool mReadOnly = false
+    private static let mApplications = new HashMap<string, HashMap<LocaleLanguage, LocalePrivate>>
 
     construct(LocaleLanguage lang)
-        m_lang = lang
+        mLang = lang
 
     override function get(string key) returns string
         if super.has(key)
@@ -22,31 +23,35 @@ class LocalePrivate extends HashMap<string, string>
             if value.isNotBlank()
                 return value
         else
-            Log.error("Locale-wurst: key {0} isn`t exists.".format(key))
+            error("Locale-wurst: key \"{0}\" isn`t exists.".format(key))
+                
         return key
 
     override function put(string key, string value)
-        if not m_readOnly
+        if not mReadOnly
             super.put(key, value)
     
     function setReadOnly(bool enable)
-        m_readOnly = enable
+        mReadOnly = enable
+    
+    static function newLocale(string app, LocaleLanguage lang) returns LocalePrivate
+        if not mApplications.has(app)
+            mApplications.put(app, new HashMap<LocaleLanguage, LocalePrivate>)
+        
+        let data = mApplications.get(app)
+        if not data.has(lang)
+            data.put(lang, new LocalePrivate(lang))
+        
+        return data.get(lang)
 
 
 public function newLocale(string app, LocaleLanguage lang) returns LocalePrivate
-    if not s_Applications.has(app)
-        s_Applications.put(app, new HashMap<LocaleLanguage, LocalePrivate>)
-    
-    let data = s_Applications.get(app)
-    if not data.has(lang)
-        data.put(lang, new LocalePrivate(lang))
-    
-    return data.get(lang)
+    return LocalePrivate.newLocale(app, lang)
         ..setReadOnly(false)
 
 public function getLocale(string app, LocaleLanguage lang) returns LocalePrivate
-    return newLocale(app, lang)
+    return LocalePrivate.newLocale(app, lang)
         ..setReadOnly(true)
     
 public function isLanguage(LocaleLanguage lang) returns bool
-    return g_MapLanguage == lang
+    return MAP_LOCALE_LANGUAGE == lang
