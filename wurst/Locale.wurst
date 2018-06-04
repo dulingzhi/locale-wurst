@@ -13,6 +13,7 @@ class LocalePrivate extends HashMap<string, string>
     private LocaleLanguage mLang
     private bool mReadOnly = false
     private static let mApplications = new HashMap<string, HashMap<LocaleLanguage, LocalePrivate>>
+    private bool mSilent = true
 
     construct(LocaleLanguage lang)
         mLang = lang
@@ -22,7 +23,7 @@ class LocalePrivate extends HashMap<string, string>
             let value = super.get(key)
             if value.isNotBlank()
                 return value
-        else
+        else if not mSilent
             error("Locale-wurst: key \"{0}\" isn`t exists.".format(key))
                 
         return key
@@ -33,6 +34,9 @@ class LocalePrivate extends HashMap<string, string>
     
     function setReadOnly(bool enable)
         mReadOnly = enable
+
+    function setSilent(bool enable)
+        mSilent = enable
     
     static function newLocale(string app, LocaleLanguage lang) returns LocalePrivate
         if not mApplications.has(app)
@@ -45,9 +49,10 @@ class LocalePrivate extends HashMap<string, string>
         return data.get(lang)
 
 
-public function newLocale(string app, LocaleLanguage lang) returns LocalePrivate
+public function newLocale(string app, LocaleLanguage lang, bool silent) returns LocalePrivate
     return LocalePrivate.newLocale(app, lang)
         ..setReadOnly(false)
+        ..setSilent(silent)
 
 public function getLocale(string app, LocaleLanguage lang) returns LocalePrivate
     return LocalePrivate.newLocale(app, lang)
