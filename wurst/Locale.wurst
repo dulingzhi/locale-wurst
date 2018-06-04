@@ -6,8 +6,17 @@ import ErrorHandling
 @configurable public constant MAP_LOCALE_LANGUAGE = LocaleLanguage.enUS
 
 public enum LocaleLanguage
-    zhCN
     enUS
+    deDE
+    enGB
+    esES
+    frFR
+    itIT
+    koKR
+    plPL
+    ruRU
+    zhCN
+    zhTW
 
 class LocalePrivate extends HashMap<string, string>
     private LocaleLanguage mLang
