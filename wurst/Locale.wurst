@@ -3,8 +3,6 @@ package Locale
 import HashMap
 import ErrorHandling
 
-@configurable public constant MAP_LOCALE_LANGUAGE = LocaleLanguage.enUS
-
 public enum LocaleLanguage
     enUS
     deDE
@@ -17,6 +15,8 @@ public enum LocaleLanguage
     ruRU
     zhCN
     zhTW
+
+@configurable public constant LocaleLanguage MAP_LOCALE_LANGUAGE = LocaleLanguage.enUS
 
 class LocalePrivate extends HashMap<string, string>
     private LocaleLanguage mLang
@@ -66,6 +66,9 @@ public function newLocale(string app, LocaleLanguage lang, bool silent) returns 
 public function getLocale(string app, LocaleLanguage lang) returns LocalePrivate
     return LocalePrivate.newLocale(app, lang)
         ..setReadOnly(true)
+
+public function getLocale(string app) returns LocalePrivate
+    return getLocale(app, MAP_LOCALE_LANGUAGE)
     
 public function isLanguage(LocaleLanguage lang) returns bool
     return MAP_LOCALE_LANGUAGE == lang
