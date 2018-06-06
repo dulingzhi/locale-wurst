@@ -67,7 +67,7 @@ public function getLocale(string app, LocaleLanguage lang) returns LocalePrivate
     return LocalePrivate.newLocale(app, lang)
         ..setReadOnly(true)
 
-public function getLocale(string app) returns LocalePrivate
+public function getDefaultLocale(string app) returns LocalePrivate
     return getLocale(app, MAP_LOCALE_LANGUAGE)
     
 public function isLanguage(LocaleLanguage lang) returns bool
